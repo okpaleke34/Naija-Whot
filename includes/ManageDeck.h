@@ -53,18 +53,24 @@ public:
 		std::shuffle(deck.begin(), deck.end(), rd);
 	}
 
-	void Share(vector<Card*>& deck, vector<Player*>& players) {
-		int defStack = 5;
-		for (size_t i = 0; i < defStack; i++)
-		{
-			for (auto player : players) {
-				cout << player->name << endl;
-				player->recieveCard(deck.back());
-				deck.pop_back();
-				/*
-				cout << card->shape << " " << card->number << endl;*/
+	void Share(vector<Card*>& deck, vector<Player*>& players, int defStack = 5) {
+		if (defStack > 0 && defStack < 25) {
+			for (size_t i = 0; i < defStack; i++)
+			{
+				for (auto player : players) {
+					cout << player->name << endl;
+					player->recieveCard(deck.back());
+					deck.pop_back();
+					/*
+					cout << card->shape << " " << card->number << endl;*/
+				}
 			}
 		}
+		else {
+			//Point_4. C++ Throws an Exception if the amount user want to share by default is less than 0
+			throw out_of_range("Each player card  ust be greater than 0");
+		}
+		
 
 	}
 	void rePositionCard(vector<Player*>& players,int playerIndex,bool isUpdate = true) {

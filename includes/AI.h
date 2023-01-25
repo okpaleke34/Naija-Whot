@@ -1,5 +1,5 @@
 #pragma once
-//2. C++ Inheritance 
+//Point_2. C++ Inheritance 
 class AI:public Player{
 
 public:
@@ -10,7 +10,7 @@ public:
 		/*if (this->myTurn) {
 
 		}*/
-		cout << "Emi lokan ooo!! E don reach my turn oooo, Make space for AI wey Sabi"<<endl;
+		//cout << "Emi lokan ooo!! E don reach my turn oooo, Make space for AI wey Sabi"<<endl;
 		//cout << 
 		int c = 0;
 		for (auto card : myCards) {
@@ -35,7 +35,6 @@ public:
 					),
 					myCards.end()
 				);*/
-				//https://stackoverflow.com/questions/31048325/consecutive-removing-of-vector-elements
 				this->removeCard(card);
 
 

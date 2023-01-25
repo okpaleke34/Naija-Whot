@@ -32,7 +32,7 @@ public:
 			//check for hitting of the blocks in y axis
 			if (this->GetCurrent().GetY() <= cursor.GetY() && (this->GetCurrent().GetY() + this->height) >= cursor.GetY()) {
 				this->clicked = true;				
-				cout << "Clicked" << endl;
+				//cout << "Clicked" << endl;
 			}
 		}
 	}

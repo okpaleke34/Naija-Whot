@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 
+#include <sstream>
 #include <chrono>
 #include <thread>
 #include <algorithm>
@@ -13,10 +14,12 @@ using namespace std;
 static int g_width;
 static int g_height;
 static int g_status;
+static int g_stack;
 static int g_player_index;
 static string g_player_name;
 static int g_number_of_players;
 static bool g_ai_present;
+static int g_paused;
 
 
 #define g_dir "assets\\sprites\\"
@@ -30,6 +33,7 @@ static bool g_ai_present;
 #include "./includes/Player.h";
 #include "./includes/Element.h";
 #include "./includes/AI.h";
+#include "./includes/Screen.h";
 #include "./includes/ManageDeck.h";
 
 
@@ -38,9 +42,12 @@ class MyFramework : public Framework {
 public:
 	Card * centerCard = new Card;
 	Cursor cursor;
+	Screen *screen1 = new Screen;
 	Element background;
 	Element table;
-	Element *market = new Element;
+	Element* market = new Element;
+	Element* btn_endgame = new Element;
+	Element* btn_continue = new Element;
 
 	ManageDeck* MD = new ManageDeck;
 	vector<Card*> deck;
@@ -64,6 +71,11 @@ public:
 		table.width = g_width;
 		market->height = 101;
 		market->width = 75;
+
+		btn_continue->height = 40;
+		btn_continue->width = 200;
+		btn_endgame->height = 40;
+		btn_endgame->width = 200;
 		background.CreateElement(bPoint, "table_top.png");
 		//table.CreateElement(bPoint, "table_top.png");
 		bPoint = Point(400, 200);
@@ -98,9 +110,20 @@ public:
 
 
 		MD->shuffle(deck);
-		MD->print(deck);
-		cout << "Last : " << deck.back()->shape << deck.back()->number << endl;
-		MD->Share(deck,players);
+		//MD->print(deck);
+		//cout << "Last : " << deck.back()->shape << deck.back()->number << endl;
+		try {
+			MD->Share(deck, players,g_stack);
+		}
+		catch (invalid_argument e) {
+			std::cout << "Invalid argument exception: " <<  e.what() << std::endl;
+			MD->Share(deck, players, 5);
+		} 
+		catch(std::exception& e) {
+			//Other errors
+			std::cout << "Error occured: " << e.what() << std::endl;
+		}
+
 
 
 		for (auto player : players) {
@@ -109,8 +132,8 @@ public:
 				cout << card->shape <<" "<< card->number<<endl;
 			}
 		}
-		cout << "\n\nNEW DECK \n\n";
-		MD->print(deck);
+		/*cout << "\n\nNEW DECK \n\n";
+		MD->print(deck);*/
 
 
 
@@ -183,12 +206,16 @@ public:
 		MD->rePositionCard(players, g_player_index,false);
 
 
+		screen1->CreateScreen(Point(0, 0));
+		//btn_endgame->CreateElement(bPoint, "whot_back.png");
+		btn_continue->CreateElement(Point(300, 300), "btn_continue.png");
+		btn_endgame->CreateElement(Point(300, 400),"btn_end_game.png");
 
 		return true;
 	}
 
 	virtual void Close() {
-
+		cout << "\n\nByeeee :)\n\n";
 	}
 	
 	virtual bool Tick() {
@@ -289,7 +316,7 @@ public:
 		for (auto player : players) {
 			//cout << player->index << ". " << player->name << " " << player->myTurn << endl;
 			if (player->myTurn && player->name == "AI") {
-				//3. RTII to make a cast runtime so that the ai player can access AI object properties
+				//Point_3. RTII to make a cast runtime so that the AI player can access AI object properties
 				AI* ai = dynamic_cast<AI*>(player);
 				ai->play(players,deck);
 				//redraw center card after AI played
@@ -301,7 +328,29 @@ public:
 		}
 		/*card->shape = "star";
 		card->number = 5;*/
+		if (g_paused == 1) {
+			screen1->DrawScreen(Point(0, 0));
+			btn_continue->DrawElement();
+			btn_endgame->DrawElement();
+		}
+		if(g_paused == 2) {
+			//screen1->destroyScreen();
+			screen1->DrawScreen(Point(g_width * 2, g_height * 2));
+			g_paused = 0;
+		}
+		if (btn_continue->clicked) {
+			screen1->DrawScreen(Point(g_width * 2, g_height * 2));
+			g_paused = 0;
+			btn_continue->clicked = false;
+		}
 
+		if (btn_endgame->clicked) {
+			/*screen1->DrawScreen(Point(g_width * 2, g_height * 2));
+			g_paused = 0;
+			btn_continue->clicked = false;*/
+			exit(0);
+		}
+		
 		return false;
 	}
 
@@ -319,6 +368,8 @@ public:
 				card->CheckClicked(cursor.GetCurrent(), deck[0]);
 				//cout << card->shape << " Points: " << card->GetCurrent() << endl;
 			}
+			btn_continue->CheckClicked(cursor.GetCurrent());
+			btn_endgame->CheckClicked(cursor.GetCurrent());
 			market->CheckClicked(cursor.GetCurrent());
 			
 			
@@ -333,11 +384,41 @@ public:
 					cout << "   " << ai->ai << endl;
 				}
 			}
-			MD->print(deck);
+			//MD->print(deck);
 		}
 	}
 
 	virtual void onKeyPressed(FRKey k) {
+		//moving the platform on keyboard press and release
+
+		switch (k)
+		{
+			case FRKey::DOWN:
+			{
+				//screen1->DrawScreen();
+				g_paused = g_paused == 1?2:1;
+				//if(g_paused)
+				/*key_l = k;
+				inertia_l = true;
+				platform.MovePlatform(Point(-power_l, 0));
+				power_l += g_platform_increase;*/
+
+			}
+			break;
+			case FRKey::LEFT:
+			{
+				//cout << "left ";
+				//screen1->DrawScreen();
+				/*key_l = k;
+				inertia_l = true;
+				platform.MovePlatform(Point(-power_l, 0));
+				power_l += g_platform_increase;*/
+
+			}
+			break;
+		}
+
+
 	}
 
 	virtual void onKeyReleased(FRKey k) {
@@ -351,12 +432,23 @@ public:
 
 int main(int argc, char* argv[])
 {
-	g_height = 600;
-	g_width = 800;
+	Utils util;
+
+	struct Switches mySwitch;
+	mySwitch = util.permuation(argc, argv);
+
+	srand(time(NULL));
+
+	g_stack = mySwitch.stack;
+	g_width = mySwitch.screen_width;
+	g_height = mySwitch.screen_height;
+
+	cout << "STACK: "<< g_stack << endl;
 	g_player_index = 0;
 	g_player_name = "";
 	g_number_of_players = 2;
 	g_ai_present = true;
+	g_paused = false;
 	return run(new MyFramework);
 }
 

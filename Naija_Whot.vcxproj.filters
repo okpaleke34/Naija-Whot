@@ -44,5 +44,11 @@
     <ClInclude Include="includes\ManageDeck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="includes\Screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\Framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

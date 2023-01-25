@@ -136,9 +136,11 @@
     <ClInclude Include="includes\Card.h" />
     <ClInclude Include="includes\Cursor.h" />
     <ClInclude Include="includes\Element.h" />
+    <ClInclude Include="includes\Framework.h" />
     <ClInclude Include="includes\ManageDeck.h" />
     <ClInclude Include="includes\Player.h" />
     <ClInclude Include="includes\Point.h" />
+    <ClInclude Include="includes\Screen.h" />
     <ClInclude Include="includes\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
