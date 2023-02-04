@@ -48,7 +48,9 @@ public:
 		return !(*this == other);
 	}
 
-
+	/*
+	* is the cout operator that prints out the point to the console
+	*/
 	friend std::ostream& operator << (std::ostream& out, const Point& other)
 	{
 		out << " X " << other.x << " y " << other.y << std::endl;

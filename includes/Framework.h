@@ -47,6 +47,7 @@ enum class FRMouseButton {
 	COUNT
 };
 
+//Point_6. C++ Polymorphism with pure virtual function 
 class Framework {
 public:
 

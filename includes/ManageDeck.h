@@ -2,6 +2,11 @@
 
 class ManageDeck {
 public:
+	/*
+	* The function loads all the cards elements to a card class
+	* @param deck is the reference of the vector of all the cards(deck)
+	* @param cardstotal is the total cards tpo load
+	*/
 	void loadCards(vector<Card*>& deck, int cardsTotal) {
 		int star[7] = { 1,2,3,4,5,7,8 };
 		int cross[9] = { 1,2,3,5,7,10,11,13,14 };
@@ -47,26 +52,47 @@ public:
 		}
 
 	}
-
+	/*
+	* this class shuffles the card to make it random
+	* @param deck is the reference of the deck of the cards to shuffle
+	*/
 	void shuffle(vector<Card*>& deck) {
 		std::random_device rd;
 		std::shuffle(deck.begin(), deck.end(), rd);
 	}
 
-	void Share(vector<Card*>& deck, vector<Player*>& players) {
-		int defStack = 5;
-		for (size_t i = 0; i < defStack; i++)
-		{
-			for (auto player : players) {
-				cout << player->name << endl;
-				player->recieveCard(deck.back());
-				deck.pop_back();
-				/*
-				cout << card->shape << " " << card->number << endl;*/
+	/*
+	* This function shares the card to the available players.
+	* @param deck is the deck of card to share to players
+	* @param players is the vector of players avaialable to recieve the card
+	* @param defStack is the number of card each player will get. it throws exception if the defStack is less than 1 or greater then 25
+	*/
+	void Share(vector<Card*>& deck, vector<Player*>& players, int defStack = 5) {
+		if (defStack > 0 && defStack < 25) {
+			for (size_t i = 0; i < defStack; i++)
+			{
+				for (auto player : players) {
+					cout << player->name << endl;
+					player->recieveCard(deck.back());
+					deck.pop_back();
+					/*
+					cout << card->shape << " " << card->number << endl;*/
+				}
 			}
 		}
+		else {
+			//Point_4. C++ Throws an Exception if the amount user want to share by default is less than 0
+			throw out_of_range("Each player card  ust be greater than 0");
+		}
+		
 
 	}
+	/*
+	* This function repositions the player card to look pretty and standard on the table
+	* @param players is teh list of players  playing the game
+	* @param playerIndex is the index of the player to rearrange their card
+	* @param isUpdate is to check if the card added is new or not
+	*/
 	void rePositionCard(vector<Player*>& players,int playerIndex,bool isUpdate = true) {
 		int k = 0; int i = 0;
 		for (auto card : players[playerIndex]->myCards) {
@@ -94,6 +120,7 @@ public:
 				card->SetCurrent(point);
 			}
 			else {
+				//card->SetCurrent(point);
 				card->CreateCard(point);
 			}
 
@@ -106,6 +133,10 @@ public:
 
 	}
 
+	/*
+	* prints the available card to the console
+	* @param deck is the vector of cards tobe printed
+	*/
 	void print(vector<Card*>& deck) {
 		int i = 1;
 		for (auto card : deck) {

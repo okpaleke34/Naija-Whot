@@ -8,18 +8,27 @@ public:
 	bool myTurn = false;
 	//a dummy virtual function to make the class polymorphic
 	virtual void dummy() {}
+
 	void recieveCards(vector<Card> newCard) {
 		//myCards.push_back(newCard);
 		//change the ownership to player index
 		//myCards.insert(myCards.end(), newCard.begin(), newCard.end());
 	}
+	/*
+	* recieve card from market
+	* @param newCard  is the new card to receive to the player deck
+	*/
 	void recieveCard(Card *newCard) {
 		newCard->owner = this->index;
 		myCards.push_back(newCard);
 		//change the ownership to player index
 	}
 
-	//vector<Card> removeCard(Card *card) {
+
+	/*
+	* remove card from player hand
+	* @param card is the new card to receive to the player deck
+	*/
 	void removeCard(Card *card) {
 		std::pair<bool, int > result;
 		result  = util.findInVector(myCards, card);
